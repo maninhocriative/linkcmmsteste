@@ -14,16 +14,231 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      assets: {
+        Row: {
+          codigo_interno: string
+          created_at: string
+          id: string
+          local_padrao: string | null
+          nome: string
+          qr_code_value: string
+          setor_padrao: string | null
+          status: string
+        }
+        Insert: {
+          codigo_interno: string
+          created_at?: string
+          id?: string
+          local_padrao?: string | null
+          nome: string
+          qr_code_value: string
+          setor_padrao?: string | null
+          status?: string
+        }
+        Update: {
+          codigo_interno?: string
+          created_at?: string
+          id?: string
+          local_padrao?: string | null
+          nome?: string
+          qr_code_value?: string
+          setor_padrao?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      parts_used: {
+        Row: {
+          codigo_peca: string | null
+          created_at: string
+          id: string
+          item: string
+          quantidade: number
+          work_order_id: string
+        }
+        Insert: {
+          codigo_peca?: string | null
+          created_at?: string
+          id?: string
+          item: string
+          quantidade?: number
+          work_order_id: string
+        }
+        Update: {
+          codigo_peca?: string | null
+          created_at?: string
+          id?: string
+          item?: string
+          quantidade?: number
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parts_used_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          disponibilidade: Database["public"]["Enums"]["disponibilidade"]
+          id: string
+          matricula: string | null
+          nome: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          disponibilidade?: Database["public"]["Enums"]["disponibilidade"]
+          id?: string
+          matricula?: string | null
+          nome: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          disponibilidade?: Database["public"]["Enums"]["disponibilidade"]
+          id?: string
+          matricula?: string | null
+          nome?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      work_orders: {
+        Row: {
+          acao_corretiva: string | null
+          acao_preventiva: string | null
+          asset_id: string
+          closed_at: string | null
+          created_at: string
+          descricao_solicitante: string
+          diagnostico: string | null
+          evidencia_url: string | null
+          foto_solicitante_url: string | null
+          id: string
+          local: string | null
+          prioridade: Database["public"]["Enums"]["prioridade"]
+          protocolo: string
+          setor: string
+          solicitante_id: string | null
+          solicitante_nome: string
+          status: Database["public"]["Enums"]["os_status"]
+          tecnico_id: string | null
+          tempo_gasto: string | null
+          tipo_ocorrencia: Database["public"]["Enums"]["tipo_ocorrencia"]
+        }
+        Insert: {
+          acao_corretiva?: string | null
+          acao_preventiva?: string | null
+          asset_id: string
+          closed_at?: string | null
+          created_at?: string
+          descricao_solicitante: string
+          diagnostico?: string | null
+          evidencia_url?: string | null
+          foto_solicitante_url?: string | null
+          id?: string
+          local?: string | null
+          prioridade: Database["public"]["Enums"]["prioridade"]
+          protocolo: string
+          setor: string
+          solicitante_id?: string | null
+          solicitante_nome: string
+          status?: Database["public"]["Enums"]["os_status"]
+          tecnico_id?: string | null
+          tempo_gasto?: string | null
+          tipo_ocorrencia: Database["public"]["Enums"]["tipo_ocorrencia"]
+        }
+        Update: {
+          acao_corretiva?: string | null
+          acao_preventiva?: string | null
+          asset_id?: string
+          closed_at?: string | null
+          created_at?: string
+          descricao_solicitante?: string
+          diagnostico?: string | null
+          evidencia_url?: string | null
+          foto_solicitante_url?: string | null
+          id?: string
+          local?: string | null
+          prioridade?: Database["public"]["Enums"]["prioridade"]
+          protocolo?: string
+          setor?: string
+          solicitante_id?: string | null
+          solicitante_nome?: string
+          status?: Database["public"]["Enums"]["os_status"]
+          tecnico_id?: string | null
+          tempo_gasto?: string | null
+          tipo_ocorrencia?: Database["public"]["Enums"]["tipo_ocorrencia"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_orders_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "ADMIN" | "MANUTENCAO" | "OPERACAO"
+      disponibilidade: "DISPONIVEL" | "OCUPADO"
+      os_status: "ABERTO" | "EM_ANDAMENTO" | "FECHADO"
+      prioridade: "BAIXA" | "MEDIA" | "ALTA" | "CRITICA"
+      tipo_ocorrencia:
+        | "QUEBRA"
+        | "FALHA_INTERMITENTE"
+        | "PECA_DANIFICADA"
+        | "RUIDO"
+        | "VAZAMENTO"
+        | "OUTRO"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +365,19 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["ADMIN", "MANUTENCAO", "OPERACAO"],
+      disponibilidade: ["DISPONIVEL", "OCUPADO"],
+      os_status: ["ABERTO", "EM_ANDAMENTO", "FECHADO"],
+      prioridade: ["BAIXA", "MEDIA", "ALTA", "CRITICA"],
+      tipo_ocorrencia: [
+        "QUEBRA",
+        "FALHA_INTERMITENTE",
+        "PECA_DANIFICADA",
+        "RUIDO",
+        "VAZAMENTO",
+        "OUTRO",
+      ],
+    },
   },
 } as const
