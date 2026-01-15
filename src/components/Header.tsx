@@ -1,6 +1,15 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Wrench, QrCode } from 'lucide-react';
+import { Wrench, QrCode, Package, Settings, BarChart3, Menu } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 
 const Header: React.FC = () => {
   const location = useLocation();
@@ -32,6 +41,42 @@ const Header: React.FC = () => {
             <QrCode className="h-4 w-4" />
             <span className="hidden sm:inline">Novo Chamado</span>
           </Link>
+
+          <Link
+            to="/relatorios"
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              location.pathname === '/relatorios'
+                ? 'bg-primary text-primary-foreground'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+            }`}
+          >
+            <BarChart3 className="h-4 w-4" />
+            <span className="hidden sm:inline">Relatórios</span>
+          </Link>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuLabel>Cadastros</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/pecas" className="flex items-center gap-2">
+                  <Package className="h-4 w-4" />
+                  Peças
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/servicos" className="flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  Serviços
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
       </div>
     </header>

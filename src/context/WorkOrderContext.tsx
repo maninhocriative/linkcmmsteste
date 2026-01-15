@@ -47,10 +47,17 @@ export const WorkOrderProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const startWorkOrder = (id: string) => {
+    const now = new Date().toISOString();
     setWorkOrders((prev) =>
       prev.map((order) =>
         order.id === id
-          ? { ...order, status: 'EM_ANDAMENTO' as Status, tecnico_id: currentUser.id, tecnico: currentUser }
+          ? { 
+              ...order, 
+              status: 'EM_ANDAMENTO' as Status, 
+              tecnico_id: currentUser.id, 
+              tecnico: currentUser,
+              data_hora_inicio: now 
+            }
           : order
       )
     );
@@ -72,16 +79,32 @@ export const WorkOrderProvider: React.FC<{ children: ReactNode }> = ({ children 
       evidencia_url?: string;
     }
   ) => {
+    const now = new Date();
+    const order = workOrders.find(o => o.id === id);
+    
+    let tempoTotalMinutos: number | undefined;
+    let tempoTotalHoras: number | undefined;
+    
+    if (order?.data_hora_inicio) {
+      const inicio = new Date(order.data_hora_inicio);
+      tempoTotalMinutos = Math.round((now.getTime() - inicio.getTime()) / 60000);
+      tempoTotalHoras = Math.round((tempoTotalMinutos / 60) * 100) / 100;
+    }
+
     setWorkOrders((prev) =>
-      prev.map((order) =>
-        order.id === id
+      prev.map((o) =>
+        o.id === id
           ? {
-              ...order,
+              ...o,
               ...data,
               status: 'FECHADO' as Status,
-              closed_at: new Date().toISOString(),
+              closed_at: now.toISOString(),
+              data_hora_fim: now.toISOString(),
+              tempo_total_minutos: tempoTotalMinutos,
+              tempo_total_horas: tempoTotalHoras,
+              tempo_gasto: tempoTotalMinutos ? `${tempoTotalMinutos} min` : data.tempo_gasto,
             }
-          : order
+          : o
       )
     );
     setUsers((prev) =>
