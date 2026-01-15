@@ -47,13 +47,139 @@ export type Database = {
         }
         Relationships: []
       }
+      parts_acquisition: {
+        Row: {
+          codigo: string | null
+          created_at: string
+          data_prevista_chegada: string | null
+          fornecedor: string | null
+          id: string
+          nome_peca: string
+          observacoes: string | null
+          part_catalog_id: string | null
+          prazo_entrega_dias: number | null
+          quantidade: number
+          status: Database["public"]["Enums"]["status_compra"] | null
+          updated_at: string
+          valor_total: number | null
+          valor_unitario: number | null
+          work_order_id: string
+        }
+        Insert: {
+          codigo?: string | null
+          created_at?: string
+          data_prevista_chegada?: string | null
+          fornecedor?: string | null
+          id?: string
+          nome_peca: string
+          observacoes?: string | null
+          part_catalog_id?: string | null
+          prazo_entrega_dias?: number | null
+          quantidade?: number
+          status?: Database["public"]["Enums"]["status_compra"] | null
+          updated_at?: string
+          valor_total?: number | null
+          valor_unitario?: number | null
+          work_order_id: string
+        }
+        Update: {
+          codigo?: string | null
+          created_at?: string
+          data_prevista_chegada?: string | null
+          fornecedor?: string | null
+          id?: string
+          nome_peca?: string
+          observacoes?: string | null
+          part_catalog_id?: string | null
+          prazo_entrega_dias?: number | null
+          quantidade?: number
+          status?: Database["public"]["Enums"]["status_compra"] | null
+          updated_at?: string
+          valor_total?: number | null
+          valor_unitario?: number | null
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parts_acquisition_part_catalog_id_fkey"
+            columns: ["part_catalog_id"]
+            isOneToOne: false
+            referencedRelation: "parts_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parts_acquisition_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      parts_catalog: {
+        Row: {
+          categoria: string | null
+          codigo_fabricante: string | null
+          codigo_interno: string | null
+          created_at: string
+          estoque_atual: number | null
+          estoque_minimo: number | null
+          fornecedor_padrao: string | null
+          id: string
+          nome: string
+          observacoes: string | null
+          prazo_medio_entrega: number | null
+          status: string | null
+          unidade_medida: string | null
+          updated_at: string
+          valor_medio: number | null
+        }
+        Insert: {
+          categoria?: string | null
+          codigo_fabricante?: string | null
+          codigo_interno?: string | null
+          created_at?: string
+          estoque_atual?: number | null
+          estoque_minimo?: number | null
+          fornecedor_padrao?: string | null
+          id?: string
+          nome: string
+          observacoes?: string | null
+          prazo_medio_entrega?: number | null
+          status?: string | null
+          unidade_medida?: string | null
+          updated_at?: string
+          valor_medio?: number | null
+        }
+        Update: {
+          categoria?: string | null
+          codigo_fabricante?: string | null
+          codigo_interno?: string | null
+          created_at?: string
+          estoque_atual?: number | null
+          estoque_minimo?: number | null
+          fornecedor_padrao?: string | null
+          id?: string
+          nome?: string
+          observacoes?: string | null
+          prazo_medio_entrega?: number | null
+          status?: string | null
+          unidade_medida?: string | null
+          updated_at?: string
+          valor_medio?: number | null
+        }
+        Relationships: []
+      }
       parts_used: {
         Row: {
           codigo_peca: string | null
           created_at: string
           id: string
           item: string
+          part_catalog_id: string | null
           quantidade: number
+          valor_total: number | null
+          valor_unitario: number | null
           work_order_id: string
         }
         Insert: {
@@ -61,7 +187,10 @@ export type Database = {
           created_at?: string
           id?: string
           item: string
+          part_catalog_id?: string | null
           quantidade?: number
+          valor_total?: number | null
+          valor_unitario?: number | null
           work_order_id: string
         }
         Update: {
@@ -69,12 +198,72 @@ export type Database = {
           created_at?: string
           id?: string
           item?: string
+          part_catalog_id?: string | null
           quantidade?: number
+          valor_total?: number | null
+          valor_unitario?: number | null
           work_order_id?: string
         }
         Relationships: [
           {
+            foreignKeyName: "parts_used_part_catalog_id_fkey"
+            columns: ["part_catalog_id"]
+            isOneToOne: false
+            referencedRelation: "parts_catalog"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "parts_used_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      preventive_actions: {
+        Row: {
+          created_at: string
+          custo_estimado: number | null
+          descricao: string
+          id: string
+          observacoes: string | null
+          pecas_recomendadas: string | null
+          periodicidade: Database["public"]["Enums"]["periodicidade"] | null
+          responsavel_id: string | null
+          responsavel_nome: string | null
+          updated_at: string
+          work_order_id: string
+        }
+        Insert: {
+          created_at?: string
+          custo_estimado?: number | null
+          descricao: string
+          id?: string
+          observacoes?: string | null
+          pecas_recomendadas?: string | null
+          periodicidade?: Database["public"]["Enums"]["periodicidade"] | null
+          responsavel_id?: string | null
+          responsavel_nome?: string | null
+          updated_at?: string
+          work_order_id: string
+        }
+        Update: {
+          created_at?: string
+          custo_estimado?: number | null
+          descricao?: string
+          id?: string
+          observacoes?: string | null
+          pecas_recomendadas?: string | null
+          periodicidade?: Database["public"]["Enums"]["periodicidade"] | null
+          responsavel_id?: string | null
+          responsavel_nome?: string | null
+          updated_at?: string
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "preventive_actions_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
             referencedRelation: "work_orders"
@@ -112,6 +301,162 @@ export type Database = {
         }
         Relationships: []
       }
+      services_catalog: {
+        Row: {
+          categoria: Database["public"]["Enums"]["categoria_servico"]
+          created_at: string
+          descricao: string | null
+          id: string
+          nome: string
+          status: string | null
+          tempo_padrao_minutos: number | null
+          tipo: Database["public"]["Enums"]["tipo_servico"]
+          updated_at: string
+          valor_servico: number | null
+        }
+        Insert: {
+          categoria?: Database["public"]["Enums"]["categoria_servico"]
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome: string
+          status?: string | null
+          tempo_padrao_minutos?: number | null
+          tipo?: Database["public"]["Enums"]["tipo_servico"]
+          updated_at?: string
+          valor_servico?: number | null
+        }
+        Update: {
+          categoria?: Database["public"]["Enums"]["categoria_servico"]
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome?: string
+          status?: string | null
+          tempo_padrao_minutos?: number | null
+          tipo?: Database["public"]["Enums"]["tipo_servico"]
+          updated_at?: string
+          valor_servico?: number | null
+        }
+        Relationships: []
+      }
+      services_executed: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: string
+          nome_servico: string
+          service_catalog_id: string | null
+          tecnico_id: string | null
+          tecnico_nome: string | null
+          tempo_padrao_minutos: number | null
+          tempo_real_minutos: number | null
+          updated_at: string
+          valor_servico: number | null
+          work_order_id: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome_servico: string
+          service_catalog_id?: string | null
+          tecnico_id?: string | null
+          tecnico_nome?: string | null
+          tempo_padrao_minutos?: number | null
+          tempo_real_minutos?: number | null
+          updated_at?: string
+          valor_servico?: number | null
+          work_order_id: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome_servico?: string
+          service_catalog_id?: string | null
+          tecnico_id?: string | null
+          tecnico_nome?: string | null
+          tempo_padrao_minutos?: number | null
+          tempo_real_minutos?: number | null
+          updated_at?: string
+          valor_servico?: number | null
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_executed_service_catalog_id_fkey"
+            columns: ["service_catalog_id"]
+            isOneToOne: false
+            referencedRelation: "services_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_executed_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_movements: {
+        Row: {
+          created_at: string
+          id: string
+          motivo: string | null
+          part_catalog_id: string
+          quantidade: number
+          quantidade_anterior: number | null
+          quantidade_posterior: number | null
+          tipo: string
+          usuario_id: string | null
+          usuario_nome: string | null
+          work_order_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          motivo?: string | null
+          part_catalog_id: string
+          quantidade: number
+          quantidade_anterior?: number | null
+          quantidade_posterior?: number | null
+          tipo: string
+          usuario_id?: string | null
+          usuario_nome?: string | null
+          work_order_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          motivo?: string | null
+          part_catalog_id?: string
+          quantidade?: number
+          quantidade_anterior?: number | null
+          quantidade_posterior?: number | null
+          tipo?: string
+          usuario_id?: string | null
+          usuario_nome?: string | null
+          work_order_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_movements_part_catalog_id_fkey"
+            columns: ["part_catalog_id"]
+            isOneToOne: false
+            referencedRelation: "parts_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -140,6 +485,8 @@ export type Database = {
           asset_id: string
           closed_at: string | null
           created_at: string
+          data_hora_fim: string | null
+          data_hora_inicio: string | null
           descricao_solicitante: string
           diagnostico: string | null
           evidencia_url: string | null
@@ -154,6 +501,8 @@ export type Database = {
           status: Database["public"]["Enums"]["os_status"]
           tecnico_id: string | null
           tempo_gasto: string | null
+          tempo_total_horas: number | null
+          tempo_total_minutos: number | null
           tipo_ocorrencia: Database["public"]["Enums"]["tipo_ocorrencia"]
         }
         Insert: {
@@ -162,6 +511,8 @@ export type Database = {
           asset_id: string
           closed_at?: string | null
           created_at?: string
+          data_hora_fim?: string | null
+          data_hora_inicio?: string | null
           descricao_solicitante: string
           diagnostico?: string | null
           evidencia_url?: string | null
@@ -176,6 +527,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["os_status"]
           tecnico_id?: string | null
           tempo_gasto?: string | null
+          tempo_total_horas?: number | null
+          tempo_total_minutos?: number | null
           tipo_ocorrencia: Database["public"]["Enums"]["tipo_ocorrencia"]
         }
         Update: {
@@ -184,6 +537,8 @@ export type Database = {
           asset_id?: string
           closed_at?: string | null
           created_at?: string
+          data_hora_fim?: string | null
+          data_hora_inicio?: string | null
           descricao_solicitante?: string
           diagnostico?: string | null
           evidencia_url?: string | null
@@ -198,6 +553,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["os_status"]
           tecnico_id?: string | null
           tempo_gasto?: string | null
+          tempo_total_horas?: number | null
+          tempo_total_minutos?: number | null
           tipo_ocorrencia?: Database["public"]["Enums"]["tipo_ocorrencia"]
         }
         Relationships: [
@@ -229,9 +586,25 @@ export type Database = {
     }
     Enums: {
       app_role: "ADMIN" | "MANUTENCAO" | "OPERACAO"
+      categoria_servico:
+        | "ELETRICA"
+        | "MECANICA"
+        | "HIDRAULICA"
+        | "PNEUMATICA"
+        | "AJUSTE"
+        | "LUBRIFICACAO"
+        | "OUTRO"
       disponibilidade: "DISPONIVEL" | "OCUPADO"
       os_status: "ABERTO" | "EM_ANDAMENTO" | "FECHADO"
+      periodicidade:
+        | "DIARIA"
+        | "SEMANAL"
+        | "MENSAL"
+        | "TRIMESTRAL"
+        | "SEMESTRAL"
+        | "ANUAL"
       prioridade: "BAIXA" | "MEDIA" | "ALTA" | "CRITICA"
+      status_compra: "PLANEJADO" | "ORCADO" | "COMPRADO" | "RECEBIDO"
       tipo_ocorrencia:
         | "QUEBRA"
         | "FALHA_INTERMITENTE"
@@ -239,6 +612,7 @@ export type Database = {
         | "RUIDO"
         | "VAZAMENTO"
         | "OUTRO"
+      tipo_servico: "CORRETIVO" | "PREVENTIVO"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -367,9 +741,27 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["ADMIN", "MANUTENCAO", "OPERACAO"],
+      categoria_servico: [
+        "ELETRICA",
+        "MECANICA",
+        "HIDRAULICA",
+        "PNEUMATICA",
+        "AJUSTE",
+        "LUBRIFICACAO",
+        "OUTRO",
+      ],
       disponibilidade: ["DISPONIVEL", "OCUPADO"],
       os_status: ["ABERTO", "EM_ANDAMENTO", "FECHADO"],
+      periodicidade: [
+        "DIARIA",
+        "SEMANAL",
+        "MENSAL",
+        "TRIMESTRAL",
+        "SEMESTRAL",
+        "ANUAL",
+      ],
       prioridade: ["BAIXA", "MEDIA", "ALTA", "CRITICA"],
+      status_compra: ["PLANEJADO", "ORCADO", "COMPRADO", "RECEBIDO"],
       tipo_ocorrencia: [
         "QUEBRA",
         "FALHA_INTERMITENTE",
@@ -378,6 +770,7 @@ export const Constants = {
         "VAZAMENTO",
         "OUTRO",
       ],
+      tipo_servico: ["CORRETIVO", "PREVENTIVO"],
     },
   },
 } as const
