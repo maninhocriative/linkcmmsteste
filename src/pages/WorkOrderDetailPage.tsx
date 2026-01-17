@@ -336,26 +336,62 @@ const WorkOrderDetailPage: React.FC = () => {
                   />
                 </div>
 
-                {/* Tempo Gasto */}
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="tempo_gasto"
-                    className="flex items-center gap-2 text-sm font-medium"
-                  >
-                    <Clock className="h-4 w-4 text-primary" />
-                    Tempo Gasto
-                  </Label>
-                  <Input
-                    id="tempo_gasto"
-                    value={formData.tempo_gasto}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, tempo_gasto: e.target.value }))
-                    }
-                    placeholder="Ex: 45 min ou 1h30"
-                    disabled={isReadOnly}
-                    className={`max-w-xs ${isReadOnly ? 'bg-muted' : ''}`}
-                  />
-                </div>
+                {/* Tempo Automático - Calculado pelo Sistema */}
+                {(order.data_hora_inicio || order.status !== 'ABERTO') && (
+                  <div className="rounded-xl border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 p-5">
+                    <div className="mb-3 flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20">
+                        <Clock className="h-4 w-4 text-primary" />
+                      </div>
+                      <h3 className="font-semibold text-foreground">Tempo de Manutenção</h3>
+                      <span className="ml-auto rounded-full bg-primary/20 px-2 py-0.5 text-xs font-medium text-primary">
+                        Automático
+                      </span>
+                    </div>
+                    
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      {/* Início */}
+                      <div className="rounded-lg bg-background/60 p-3">
+                        <p className="mb-1 text-xs font-medium text-muted-foreground">Início</p>
+                        <p className="font-mono text-sm font-semibold text-foreground">
+                          {order.data_hora_inicio 
+                            ? formatDate(order.data_hora_inicio)
+                            : '—'}
+                        </p>
+                      </div>
+                      
+                      {/* Fim */}
+                      <div className="rounded-lg bg-background/60 p-3">
+                        <p className="mb-1 text-xs font-medium text-muted-foreground">Fim</p>
+                        <p className="font-mono text-sm font-semibold text-foreground">
+                          {order.data_hora_fim 
+                            ? formatDate(order.data_hora_fim)
+                            : order.status === 'EM_ANDAMENTO' 
+                              ? 'Em andamento...' 
+                              : '—'}
+                        </p>
+                      </div>
+                      
+                      {/* Tempo Total Destacado */}
+                      <div className="rounded-lg bg-primary/20 p-3">
+                        <p className="mb-1 text-xs font-medium text-primary">Tempo Total</p>
+                        <p className="font-mono text-lg font-bold text-primary">
+                          {order.tempo_total_horas !== null && order.tempo_total_horas !== undefined
+                            ? `${Math.floor(order.tempo_total_horas)}h ${order.tempo_total_minutos ? order.tempo_total_minutos % 60 : 0}min`
+                            : order.tempo_total_minutos 
+                              ? `${order.tempo_total_minutos} min`
+                              : order.status === 'EM_ANDAMENTO'
+                                ? 'Calculando...'
+                                : '—'}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <p className="mt-3 text-xs text-muted-foreground">
+                      ⏱️ Tempo calculado automaticamente pelo sistema (início ao fechar a OS)
+                    </p>
+                  </div>
+                )}
 
                 {/* Parts Used */}
                 <PartsUsedList
