@@ -36,6 +36,16 @@ export interface User {
   disponibilidade: Disponibilidade;
 }
 
+export interface Profile {
+  id: string;
+  user_id: string;
+  nome: string;
+  matricula?: string;
+  disponibilidade: Disponibilidade;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface WorkOrder {
   id: string;
   protocolo: string;
