@@ -6,11 +6,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Trash2, Edit, Check, X } from 'lucide-react';
 import { MaintenancePlanItem, FrequenciaManutencao, TipoProcedimento, FREQUENCIA_LABELS, TIPO_PROCEDIMENTO_LABELS } from '@/types/maintenance';
 
+interface VerificationPoint {
+  id: string;
+  nome: string;
+  categoria: string | null;
+}
+
 interface ChecklistItemRowProps {
   item: MaintenancePlanItem;
   templateId: string;
   onUpdate: (id: string, templateId: string, updates: Partial<MaintenancePlanItem>) => void;
   onDelete: (id: string, templateId: string) => void;
+  verificationPoints: VerificationPoint[];
   isUpdating?: boolean;
 }
 
@@ -19,6 +26,7 @@ function ChecklistItemRowComponent({
   templateId,
   onUpdate,
   onDelete,
+  verificationPoints,
   isUpdating,
 }: ChecklistItemRowProps) {
   const [isEditing, setIsEditing] = useState(false);
@@ -50,6 +58,14 @@ function ChecklistItemRowComponent({
     onUpdate(item.id, templateId, { [field]: value });
   };
 
+  // Group verification points by category
+  const groupedPoints = verificationPoints.reduce((acc, point) => {
+    const category = point.categoria || 'Outros';
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(point);
+    return acc;
+  }, {} as Record<string, VerificationPoint[]>);
+
   if (isEditing) {
     return (
       <TableRow className="bg-muted/30">
@@ -68,11 +84,28 @@ function ChecklistItemRowComponent({
           />
         </TableCell>
         <TableCell>
-          <Input
-            value={editData.ponto_verificacao}
-            onChange={(e) => setEditData(prev => ({ ...prev, ponto_verificacao: e.target.value }))}
-            className="h-8"
-          />
+          <Select 
+            value={editData.ponto_verificacao} 
+            onValueChange={(v) => setEditData(prev => ({ ...prev, ponto_verificacao: v }))}
+          >
+            <SelectTrigger className="h-8 min-w-[200px]">
+              <SelectValue placeholder="Selecione..." />
+            </SelectTrigger>
+            <SelectContent className="bg-background border shadow-lg z-50 max-h-60">
+              {Object.entries(groupedPoints).map(([category, points]) => (
+                <div key={category}>
+                  <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50">
+                    {category}
+                  </div>
+                  {points.map((point) => (
+                    <SelectItem key={point.id} value={point.nome}>
+                      {point.nome}
+                    </SelectItem>
+                  ))}
+                </div>
+              ))}
+            </SelectContent>
+          </Select>
         </TableCell>
         <TableCell>
           <Select 
@@ -136,8 +169,29 @@ function ChecklistItemRowComponent({
     >
       <TableCell className="font-medium">{item.item_number}</TableCell>
       <TableCell>{item.componente}</TableCell>
-      <TableCell className="max-w-xs truncate" title={item.ponto_verificacao}>
-        {item.ponto_verificacao}
+      <TableCell onClick={(e) => e.stopPropagation()}>
+        <Select 
+          value={item.ponto_verificacao} 
+          onValueChange={(v) => handleQuickUpdate('ponto_verificacao', v)}
+        >
+          <SelectTrigger className="h-8 min-w-[180px] border-transparent hover:border-border bg-transparent">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-background border shadow-lg z-50 max-h-60">
+            {Object.entries(groupedPoints).map(([category, points]) => (
+              <div key={category}>
+                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50">
+                  {category}
+                </div>
+                {points.map((point) => (
+                  <SelectItem key={point.id} value={point.nome}>
+                    {point.nome}
+                  </SelectItem>
+                ))}
+              </div>
+            ))}
+          </SelectContent>
+        </Select>
       </TableCell>
       <TableCell onClick={(e) => e.stopPropagation()}>
         <Select 

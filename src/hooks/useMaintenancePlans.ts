@@ -57,6 +57,24 @@ export function useAssetsWithTemplates() {
   });
 }
 
+// Fetch verification points catalog
+export function useVerificationPoints() {
+  return useQuery({
+    queryKey: ['verification-points'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('verification_points_catalog')
+        .select('*')
+        .eq('status', 'ativo')
+        .order('categoria', { ascending: true })
+        .order('nome', { ascending: true });
+      
+      if (error) throw error;
+      return data as { id: string; nome: string; descricao: string | null; categoria: string | null; status: string | null }[];
+    },
+  });
+}
+
 // Create template mutation
 export function useCreateTemplate() {
   const queryClient = useQueryClient();
