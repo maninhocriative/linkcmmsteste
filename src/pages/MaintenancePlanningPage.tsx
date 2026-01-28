@@ -9,8 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, FileText, Settings2, ClipboardList, Trash2, Edit, Check, LinkIcon } from 'lucide-react';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Plus, FileText, Settings2, ClipboardList, LinkIcon } from 'lucide-react';
 import { 
   useMaintenanceTemplates, 
   useTemplateItems, 
@@ -18,6 +18,7 @@ import {
   useCreateTemplate,
   useCreateItem,
   useDeleteItem,
+  useUpdateItem,
   useAssignTemplateToAsset
 } from '@/hooks/useMaintenancePlans';
 import { 
@@ -31,6 +32,7 @@ import {
   getMonthsForFrequency 
 } from '@/types/maintenance';
 import AnnualPlanGenerator from '@/components/maintenance/AnnualPlanGenerator';
+import ChecklistItemRow from '@/components/maintenance/ChecklistItemRow';
 
 const MaintenancePlanningPage: React.FC = () => {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
@@ -60,7 +62,16 @@ const MaintenancePlanningPage: React.FC = () => {
   const createTemplate = useCreateTemplate();
   const createItem = useCreateItem();
   const deleteItem = useDeleteItem();
+  const updateItem = useUpdateItem();
   const assignTemplate = useAssignTemplateToAsset();
+
+  const handleUpdateItem = (id: string, templateId: string, updates: Partial<MaintenancePlanItem>) => {
+    updateItem.mutate({ id, templateId, ...updates });
+  };
+
+  const handleDeleteItem = (id: string, templateId: string) => {
+    deleteItem.mutate({ id, templateId });
+  };
 
   const selectedTemplate = templates.find(t => t.id === selectedTemplateId);
 
@@ -420,27 +431,14 @@ const MaintenancePlanningPage: React.FC = () => {
                       </TableHeader>
                       <TableBody>
                         {items.map((item) => (
-                          <TableRow key={item.id}>
-                            <TableCell className="font-medium">{item.item_number}</TableCell>
-                            <TableCell>{item.componente}</TableCell>
-                            <TableCell className="max-w-xs truncate">{item.ponto_verificacao}</TableCell>
-                            <TableCell>
-                              <Badge variant="outline">{FREQUENCIA_LABELS[item.frequencia]}</Badge>
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant="secondary">{TIPO_PROCEDIMENTO_LABELS[item.tipo_procedimento]}</Badge>
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-destructive"
-                                onClick={() => deleteItem.mutate({ id: item.id, templateId: selectedTemplateId! })}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
+                          <ChecklistItemRow
+                            key={item.id}
+                            item={item}
+                            templateId={selectedTemplateId!}
+                            onUpdate={handleUpdateItem}
+                            onDelete={handleDeleteItem}
+                            isUpdating={updateItem.isPending}
+                          />
                         ))}
                       </TableBody>
                     </Table>
