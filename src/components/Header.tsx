@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Wrench, QrCode, Package, Settings, BarChart3, Menu } from 'lucide-react';
+import { Wrench, QrCode, Package, Settings, BarChart3, Menu, Info } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -73,6 +73,13 @@ const Header: React.FC = () => {
                 <Link to="/servicos" className="flex items-center gap-2">
                   <Settings className="h-4 w-4" />
                   Serviços
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/sobre" className="flex items-center gap-2">
+                  <Info className="h-4 w-4" />
+                  Sobre o Sistema
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
