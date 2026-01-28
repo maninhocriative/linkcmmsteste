@@ -14,36 +14,203 @@ export type Database = {
   }
   public: {
     Tables: {
+      asset_maintenance_overrides: {
+        Row: {
+          asset_id: string
+          ativo: boolean | null
+          created_at: string
+          frequencia_customizada:
+            | Database["public"]["Enums"]["frequencia_manutencao"]
+            | null
+          id: string
+          item_id: string | null
+          observacoes: string | null
+          template_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          asset_id: string
+          ativo?: boolean | null
+          created_at?: string
+          frequencia_customizada?:
+            | Database["public"]["Enums"]["frequencia_manutencao"]
+            | null
+          id?: string
+          item_id?: string | null
+          observacoes?: string | null
+          template_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          asset_id?: string
+          ativo?: boolean | null
+          created_at?: string
+          frequencia_customizada?:
+            | Database["public"]["Enums"]["frequencia_manutencao"]
+            | null
+          id?: string
+          item_id?: string | null
+          observacoes?: string | null
+          template_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_maintenance_overrides_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_maintenance_overrides_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "maintenance_plan_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_maintenance_overrides_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "maintenance_plan_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assets: {
         Row: {
           codigo_interno: string
           created_at: string
+          fabricante: string | null
           id: string
           local_padrao: string | null
+          maintenance_template_id: string | null
+          modelo: string | null
           nome: string
+          numero_serie: string | null
           qr_code_value: string
           setor_padrao: string | null
           status: string
+          tag: string | null
         }
         Insert: {
           codigo_interno: string
           created_at?: string
+          fabricante?: string | null
           id?: string
           local_padrao?: string | null
+          maintenance_template_id?: string | null
+          modelo?: string | null
           nome: string
+          numero_serie?: string | null
           qr_code_value: string
           setor_padrao?: string | null
           status?: string
+          tag?: string | null
         }
         Update: {
           codigo_interno?: string
           created_at?: string
+          fabricante?: string | null
           id?: string
           local_padrao?: string | null
+          maintenance_template_id?: string | null
+          modelo?: string | null
           nome?: string
+          numero_serie?: string | null
           qr_code_value?: string
           setor_padrao?: string | null
           status?: string
+          tag?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assets_maintenance_template_id_fkey"
+            columns: ["maintenance_template_id"]
+            isOneToOne: false
+            referencedRelation: "maintenance_plan_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      maintenance_plan_items: {
+        Row: {
+          componente: string
+          created_at: string
+          frequencia: Database["public"]["Enums"]["frequencia_manutencao"]
+          id: string
+          instrucoes: string | null
+          item_number: string
+          ordem: number | null
+          ponto_verificacao: string
+          template_id: string
+          tipo_procedimento: Database["public"]["Enums"]["tipo_procedimento"]
+          updated_at: string
+        }
+        Insert: {
+          componente: string
+          created_at?: string
+          frequencia?: Database["public"]["Enums"]["frequencia_manutencao"]
+          id?: string
+          instrucoes?: string | null
+          item_number: string
+          ordem?: number | null
+          ponto_verificacao: string
+          template_id: string
+          tipo_procedimento?: Database["public"]["Enums"]["tipo_procedimento"]
+          updated_at?: string
+        }
+        Update: {
+          componente?: string
+          created_at?: string
+          frequencia?: Database["public"]["Enums"]["frequencia_manutencao"]
+          id?: string
+          instrucoes?: string | null
+          item_number?: string
+          ordem?: number | null
+          ponto_verificacao?: string
+          template_id?: string
+          tipo_procedimento?: Database["public"]["Enums"]["tipo_procedimento"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "maintenance_plan_items_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "maintenance_plan_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      maintenance_plan_templates: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: string
+          modelo_equipamento: string | null
+          nome: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          modelo_equipamento?: string | null
+          nome: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          modelo_equipamento?: string | null
+          nome?: string
+          status?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -595,6 +762,14 @@ export type Database = {
         | "LUBRIFICACAO"
         | "OUTRO"
       disponibilidade: "DISPONIVEL" | "OCUPADO"
+      frequencia_manutencao:
+        | "DIARIO"
+        | "SEMANAL"
+        | "QUINZENAL"
+        | "MENSAL"
+        | "TRIMESTRAL"
+        | "SEMESTRAL"
+        | "ANUAL"
       os_status: "ABERTO" | "EM_ANDAMENTO" | "FECHADO"
       periodicidade:
         | "DIARIA"
@@ -612,6 +787,14 @@ export type Database = {
         | "RUIDO"
         | "VAZAMENTO"
         | "OUTRO"
+      tipo_procedimento:
+        | "VISUAL"
+        | "LIMPEZA"
+        | "TROCA"
+        | "LUBRIFICACAO"
+        | "AJUSTE"
+        | "TESTE"
+        | "MEDICAO"
       tipo_servico: "CORRETIVO" | "PREVENTIVO"
     }
     CompositeTypes: {
@@ -751,6 +934,15 @@ export const Constants = {
         "OUTRO",
       ],
       disponibilidade: ["DISPONIVEL", "OCUPADO"],
+      frequencia_manutencao: [
+        "DIARIO",
+        "SEMANAL",
+        "QUINZENAL",
+        "MENSAL",
+        "TRIMESTRAL",
+        "SEMESTRAL",
+        "ANUAL",
+      ],
       os_status: ["ABERTO", "EM_ANDAMENTO", "FECHADO"],
       periodicidade: [
         "DIARIA",
@@ -769,6 +961,15 @@ export const Constants = {
         "RUIDO",
         "VAZAMENTO",
         "OUTRO",
+      ],
+      tipo_procedimento: [
+        "VISUAL",
+        "LIMPEZA",
+        "TROCA",
+        "LUBRIFICACAO",
+        "AJUSTE",
+        "TESTE",
+        "MEDICAO",
       ],
       tipo_servico: ["CORRETIVO", "PREVENTIVO"],
     },
