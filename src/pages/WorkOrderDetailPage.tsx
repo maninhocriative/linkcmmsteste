@@ -6,10 +6,12 @@ import Header from '@/components/Header';
 import StatusBadge from '@/components/StatusBadge';
 import PriorityBadge from '@/components/PriorityBadge';
 import PartsUsedList from '@/components/PartsUsedList';
+import WorkOrderChecklist from '@/components/workorder/WorkOrderChecklist';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   ArrowLeft,
   Wrench,
@@ -23,6 +25,8 @@ import {
   FileText,
   ShieldCheck,
   Lightbulb,
+  ClipboardList,
+  Package,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -262,14 +266,27 @@ const WorkOrderDetailPage: React.FC = () => {
             )}
           </div>
 
-          {/* Right Column - Maintenance Form */}
+          {/* Right Column - Maintenance Form with Tabs */}
           <div className="space-y-6 lg:col-span-2">
             <div className="card-elevated p-6">
-              <h2 className="mb-6 text-lg font-semibold text-foreground">
-                Registro de Manutenção
-              </h2>
+              <Tabs defaultValue="registro" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="registro" className="gap-2">
+                    <FileText className="h-4 w-4" />
+                    <span className="hidden sm:inline">Registro</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="checklist" className="gap-2">
+                    <ClipboardList className="h-4 w-4" />
+                    <span className="hidden sm:inline">Checklist</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="pecas" className="gap-2">
+                    <Package className="h-4 w-4" />
+                    <span className="hidden sm:inline">Peças</span>
+                  </TabsTrigger>
+                </TabsList>
 
-              <div className="space-y-6">
+                <TabsContent value="registro" className="mt-6">
+                  <div className="space-y-6">
                 {/* Diagnóstico */}
                 <div className="space-y-2">
                   <Label
@@ -393,32 +410,6 @@ const WorkOrderDetailPage: React.FC = () => {
                   </div>
                 )}
 
-                {/* Parts Used */}
-                <PartsUsedList
-                  parts={localParts}
-                  onAddPart={handleAddPart}
-                  onRemovePart={handleRemovePart}
-                  readOnly={isReadOnly}
-                />
-
-                {/* Evidence Upload */}
-                {!isReadOnly && (
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2 text-sm font-medium">
-                      <Upload className="h-4 w-4 text-primary" />
-                      Evidência Pós-Reparo (opcional)
-                    </Label>
-                    <div className="flex items-center justify-center rounded-lg border border-dashed border-border p-6">
-                      <div className="flex flex-col items-center gap-2 text-center">
-                        <Upload className="h-8 w-8 text-muted-foreground" />
-                        <p className="text-sm text-muted-foreground">
-                          Clique ou arraste uma imagem
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* Action Buttons */}
                 {!isReadOnly && order.status === 'EM_ANDAMENTO' && (
                   <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:justify-end">
@@ -443,7 +434,27 @@ const WorkOrderDetailPage: React.FC = () => {
                     </p>
                   </div>
                 )}
-              </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="checklist" className="mt-6">
+                  <WorkOrderChecklist
+                    workOrderId={order.id}
+                    assetId={order.asset_id}
+                    readOnly={isReadOnly}
+                    tecnicoNome={order.tecnico?.nome}
+                  />
+                </TabsContent>
+
+                <TabsContent value="pecas" className="mt-6">
+                  <PartsUsedList
+                    parts={localParts}
+                    onAddPart={handleAddPart}
+                    onRemovePart={handleRemovePart}
+                    readOnly={isReadOnly}
+                  />
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
         </div>
