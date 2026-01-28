@@ -14,13 +14,13 @@ interface ChecklistItemRowProps {
   isUpdating?: boolean;
 }
 
-const ChecklistItemRow: React.FC<ChecklistItemRowProps> = ({
+const ChecklistItemRow = React.memo<ChecklistItemRowProps>(function ChecklistItemRow({
   item,
   templateId,
   onUpdate,
   onDelete,
   isUpdating,
-}) => {
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
     item_number: item.item_number,
@@ -197,6 +197,6 @@ const ChecklistItemRow: React.FC<ChecklistItemRowProps> = ({
       </TableCell>
     </TableRow>
   );
-};
+});
 
 export default ChecklistItemRow;
