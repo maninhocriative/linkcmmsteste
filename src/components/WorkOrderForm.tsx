@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Asset, Prioridade, TipoOcorrencia } from '@/types';
+import { Prioridade, TipoOcorrencia } from '@/types';
+import { Tables } from '@/integrations/supabase/types';
 import { useWorkOrder } from '@/context/WorkOrderContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +16,8 @@ import {
 } from '@/components/ui/select';
 import { ArrowLeft, CheckCircle2, Upload, Wrench, MapPin, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+
+type Asset = Tables<'assets'>;
 
 interface WorkOrderFormProps {
   asset: Asset;
