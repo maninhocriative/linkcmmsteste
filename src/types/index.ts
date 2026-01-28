@@ -13,9 +13,15 @@ export interface Asset {
   qr_code_value: string;
   nome: string;
   codigo_interno: string;
-  setor_padrao: string;
-  local_padrao: string;
-  status: 'ativo' | 'inativo';
+  setor_padrao?: string | null;
+  local_padrao?: string | null;
+  status: string;
+  tag?: string | null;
+  modelo?: string | null;
+  numero_serie?: string | null;
+  fabricante?: string | null;
+  maintenance_template_id?: string | null;
+  created_at?: string;
 }
 
 export interface PartUsed {

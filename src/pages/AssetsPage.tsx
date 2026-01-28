@@ -4,8 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import AssetQRCodeCard from '@/components/assets/AssetQRCodeCard';
 import AssetFormDialog from '@/components/assets/AssetFormDialog';
+import BatchPrintDialog from '@/components/assets/BatchPrintDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -13,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Plus, Search, Loader2, QrCode, Package } from 'lucide-react';
+import { Plus, Search, Loader2, QrCode, Package, Printer, CheckSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import { Tables } from '@/integrations/supabase/types';
 
@@ -26,6 +28,8 @@ const AssetsPage: React.FC = () => {
   const [setorFilter, setSetorFilter] = useState<string>('todos');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
+  const [selectedAssets, setSelectedAssets] = useState<Set<string>>(new Set());
+  const [showBatchPrint, setShowBatchPrint] = useState(false);
 
   // Fetch assets
   const { data: assets, isLoading, error } = useQuery({
@@ -161,6 +165,33 @@ const AssetsPage: React.FC = () => {
     });
   }, [assets, search, statusFilter, setorFilter]);
 
+  // Selection handlers
+  const toggleAssetSelection = (assetId: string) => {
+    setSelectedAssets((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(assetId)) {
+        newSet.delete(assetId);
+      } else {
+        newSet.add(assetId);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedAssets.size === filteredAssets.length) {
+      setSelectedAssets(new Set());
+    } else {
+      setSelectedAssets(new Set(filteredAssets.map((a) => a.id)));
+    }
+  };
+
+  const clearSelection = () => {
+    setSelectedAssets(new Set());
+  };
+
+  const selectedAssetsData = filteredAssets.filter((a) => selectedAssets.has(a.id));
+
   if (error) {
     return (
       <div className="min-h-screen bg-background">
@@ -190,10 +221,22 @@ const AssetsPage: React.FC = () => {
               Gerencie equipamentos e imprima QR Codes
             </p>
           </div>
-          <Button onClick={() => setIsFormOpen(true)} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Novo Equipamento
-          </Button>
+          <div className="flex gap-2">
+            {selectedAssets.size > 0 && (
+              <Button 
+                onClick={() => setShowBatchPrint(true)} 
+                variant="outline"
+                className="gap-2"
+              >
+                <Printer className="h-4 w-4" />
+                Imprimir {selectedAssets.size} QR Code{selectedAssets.size > 1 ? 's' : ''}
+              </Button>
+            )}
+            <Button onClick={() => setIsFormOpen(true)} className="gap-2">
+              <Plus className="h-4 w-4" />
+              Novo Equipamento
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -260,6 +303,36 @@ const AssetsPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Selection Toolbar */}
+        {filteredAssets.length > 0 && (
+          <div className="mb-4 flex items-center gap-4 rounded-lg border bg-card p-3">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="select-all"
+                checked={selectedAssets.size === filteredAssets.length && filteredAssets.length > 0}
+                onCheckedChange={toggleSelectAll}
+              />
+              <label htmlFor="select-all" className="text-sm font-medium cursor-pointer">
+                Selecionar todos
+              </label>
+            </div>
+            {selectedAssets.size > 0 && (
+              <>
+                <span className="text-sm text-muted-foreground">
+                  {selectedAssets.size} selecionado{selectedAssets.size > 1 ? 's' : ''}
+                </span>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={clearSelection}
+                >
+                  Limpar seleção
+                </Button>
+              </>
+            )}
+          </div>
+        )}
+
         {/* Assets Grid */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
@@ -268,11 +341,18 @@ const AssetsPage: React.FC = () => {
         ) : filteredAssets.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredAssets.map((asset) => (
-              <AssetQRCodeCard
-                key={asset.id}
-                asset={asset}
-                onEdit={() => handleEdit(asset)}
-              />
+              <div key={asset.id} className="relative">
+                <div className="absolute left-3 top-3 z-10">
+                  <Checkbox
+                    checked={selectedAssets.has(asset.id)}
+                    onCheckedChange={() => toggleAssetSelection(asset.id)}
+                  />
+                </div>
+                <AssetQRCodeCard
+                  asset={asset}
+                  onEdit={() => handleEdit(asset)}
+                />
+              </div>
             ))}
           </div>
         ) : (
@@ -316,6 +396,14 @@ const AssetsPage: React.FC = () => {
         } : undefined}
         isEditing={!!editingAsset}
         isLoading={createMutation.isPending || updateMutation.isPending}
+      />
+
+      {/* Batch Print Dialog */}
+      <BatchPrintDialog
+        open={showBatchPrint}
+        onOpenChange={setShowBatchPrint}
+        assets={selectedAssetsData}
+        onClearSelection={clearSelection}
       />
     </div>
   );

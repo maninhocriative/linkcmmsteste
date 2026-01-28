@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Asset } from '@/types';
-import { findAssetByQR, findAssetByCode } from '@/data/mockData';
+import { supabase } from '@/integrations/supabase/client';
+import { Tables } from '@/integrations/supabase/types';
 import Header from '@/components/Header';
 import QRScanner from '@/components/QRScanner';
 import WorkOrderForm from '@/components/WorkOrderForm';
@@ -13,28 +13,61 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Loader2 } from 'lucide-react';
+
+type Asset = Tables<'assets'>;
 
 const ScanPage: React.FC = () => {
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [showNotFound, setShowNotFound] = useState(false);
   const [manualInput, setManualInput] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleQRScan = (qrValue: string) => {
-    const asset = findAssetByQR(qrValue);
-    if (asset) {
-      setSelectedAsset(asset);
-    } else {
+  const handleQRScan = async (qrValue: string) => {
+    setIsSearching(true);
+    try {
+      const { data, error } = await supabase
+        .from('assets')
+        .select('*')
+        .ilike('qr_code_value', qrValue)
+        .maybeSingle();
+
+      if (error) throw error;
+      
+      if (data) {
+        setSelectedAsset(data);
+      } else {
+        setShowNotFound(true);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar equipamento:', error);
       setShowNotFound(true);
+    } finally {
+      setIsSearching(false);
     }
   };
 
-  const handleManualInput = (code: string) => {
-    const asset = findAssetByCode(code);
-    if (asset) {
-      setSelectedAsset(asset);
-    } else {
+  const handleManualInput = async (code: string) => {
+    setIsSearching(true);
+    try {
+      const { data, error } = await supabase
+        .from('assets')
+        .select('*')
+        .or(`codigo_interno.ilike.${code},qr_code_value.ilike.${code}`)
+        .maybeSingle();
+
+      if (error) throw error;
+      
+      if (data) {
+        setSelectedAsset(data);
+      } else {
+        setShowNotFound(true);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar equipamento:', error);
       setShowNotFound(true);
+    } finally {
+      setIsSearching(false);
     }
   };
 
