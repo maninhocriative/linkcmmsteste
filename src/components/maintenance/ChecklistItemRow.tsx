@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, memo } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,13 +14,13 @@ interface ChecklistItemRowProps {
   isUpdating?: boolean;
 }
 
-const ChecklistItemRow = React.memo<ChecklistItemRowProps>(function ChecklistItemRow({
+function ChecklistItemRowComponent({
   item,
   templateId,
   onUpdate,
   onDelete,
   isUpdating,
-}) {
+}: ChecklistItemRowProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
     item_number: item.item_number,
@@ -197,6 +197,8 @@ const ChecklistItemRow = React.memo<ChecklistItemRowProps>(function ChecklistIte
       </TableCell>
     </TableRow>
   );
-});
+}
+
+const ChecklistItemRow = memo(ChecklistItemRowComponent);
 
 export default ChecklistItemRow;
