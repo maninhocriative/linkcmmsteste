@@ -15,6 +15,7 @@ import {
   useMaintenanceTemplates, 
   useTemplateItems, 
   useAssetsWithTemplates,
+  useVerificationPoints,
   useCreateTemplate,
   useCreateItem,
   useDeleteItem,
@@ -57,6 +58,7 @@ const MaintenancePlanningPage: React.FC = () => {
   const { data: templates = [], isLoading: loadingTemplates } = useMaintenanceTemplates();
   const { data: items = [], isLoading: loadingItems } = useTemplateItems(selectedTemplateId);
   const { data: assets = [], isLoading: loadingAssets } = useAssetsWithTemplates();
+  const { data: verificationPoints = [] } = useVerificationPoints();
 
   // Mutations
   const createTemplate = useCreateTemplate();
@@ -437,6 +439,7 @@ const MaintenancePlanningPage: React.FC = () => {
                             templateId={selectedTemplateId!}
                             onUpdate={handleUpdateItem}
                             onDelete={handleDeleteItem}
+                            verificationPoints={verificationPoints}
                             isUpdating={updateItem.isPending}
                           />
                         ))}
