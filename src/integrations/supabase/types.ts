@@ -214,6 +214,42 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          lido: boolean | null
+          mensagem: string
+          referencia_id: string | null
+          referencia_tipo: string | null
+          tipo: string
+          titulo: string
+          usuario_destino_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lido?: boolean | null
+          mensagem: string
+          referencia_id?: string | null
+          referencia_tipo?: string | null
+          tipo: string
+          titulo: string
+          usuario_destino_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lido?: boolean | null
+          mensagem?: string
+          referencia_id?: string | null
+          referencia_tipo?: string | null
+          tipo?: string
+          titulo?: string
+          usuario_destino_id?: string | null
+        }
+        Relationships: []
+      }
       parts_acquisition: {
         Row: {
           codigo: string | null
@@ -644,6 +680,72 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      work_order_checklist: {
+        Row: {
+          componente: string
+          concluido: boolean | null
+          created_at: string
+          data_execucao: string | null
+          id: string
+          item_id: string | null
+          item_number: string | null
+          observacao: string | null
+          ponto_verificacao: string
+          tecnico_id: string | null
+          tecnico_nome: string | null
+          tipo_procedimento: Database["public"]["Enums"]["tipo_procedimento"]
+          updated_at: string
+          work_order_id: string
+        }
+        Insert: {
+          componente: string
+          concluido?: boolean | null
+          created_at?: string
+          data_execucao?: string | null
+          id?: string
+          item_id?: string | null
+          item_number?: string | null
+          observacao?: string | null
+          ponto_verificacao: string
+          tecnico_id?: string | null
+          tecnico_nome?: string | null
+          tipo_procedimento?: Database["public"]["Enums"]["tipo_procedimento"]
+          updated_at?: string
+          work_order_id: string
+        }
+        Update: {
+          componente?: string
+          concluido?: boolean | null
+          created_at?: string
+          data_execucao?: string | null
+          id?: string
+          item_id?: string | null
+          item_number?: string | null
+          observacao?: string | null
+          ponto_verificacao?: string
+          tecnico_id?: string | null
+          tecnico_nome?: string | null
+          tipo_procedimento?: Database["public"]["Enums"]["tipo_procedimento"]
+          updated_at?: string
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_order_checklist_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "maintenance_plan_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_order_checklist_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       work_orders: {
         Row: {
