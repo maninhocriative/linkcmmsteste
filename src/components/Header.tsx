@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Wrench, QrCode, Package, Settings, BarChart3, Menu, Info } from 'lucide-react';
+import { Wrench, QrCode, Package, Settings, BarChart3, Menu, Info, ClipboardList } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,6 +61,15 @@ const Header: React.FC = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuLabel>Planejamento</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/planejamento" className="flex items-center gap-2">
+                  <ClipboardList className="h-4 w-4" />
+                  Planos de Manutenção
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuLabel>Cadastros</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
