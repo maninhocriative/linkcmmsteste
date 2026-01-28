@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Wrench, QrCode, Package, Settings, BarChart3, Menu, Info, ClipboardList, LogOut, User, Shield } from 'lucide-react';
+import { QrCode, Package, Settings, BarChart3, Menu, Info, ClipboardList, LogOut, User, Shield } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import { Badge } from '@/components/ui/badge';
+import hondaLogo from '@/assets/honda-logo.png';
 
 const ROLE_LABELS: Record<string, string> = {
   ADMIN: 'Administrador',
@@ -34,9 +35,7 @@ const Header: React.FC = () => {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-card/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <Wrench className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <img src={hondaLogo} alt="Honda" className="h-10 w-auto" />
           <div>
             <h1 className="text-lg font-semibold leading-tight text-foreground">
               Sistema de Manutenção
