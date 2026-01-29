@@ -29,7 +29,7 @@ const ScanPage: React.FC = () => {
       const { data, error } = await supabase
         .from('assets')
         .select('*')
-        .ilike('qr_code_value', qrValue)
+        .eq('id', qrValue)
         .maybeSingle();
 
       if (error) throw error;
@@ -50,10 +50,11 @@ const ScanPage: React.FC = () => {
   const handleManualInput = async (code: string) => {
     setIsSearching(true);
     try {
+      // Busca pelo ID único, código interno ou qr_code_value
       const { data, error } = await supabase
         .from('assets')
         .select('*')
-        .or(`codigo_interno.ilike.${code},qr_code_value.ilike.${code}`)
+        .or(`id.eq.${code},codigo_interno.ilike.%${code}%`)
         .maybeSingle();
 
       if (error) throw error;

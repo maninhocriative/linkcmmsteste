@@ -167,7 +167,7 @@ const AssetQRCodeCard: React.FC<AssetQRCodeCardProps> = ({ asset, onEdit }) => {
           className="flex justify-center rounded-lg bg-muted/50 p-4"
         >
           <QRCodeSVG
-            value={asset.qr_code_value}
+            value={asset.id}
             size={160}
             level="H"
             includeMargin
@@ -177,14 +177,7 @@ const AssetQRCodeCard: React.FC<AssetQRCodeCardProps> = ({ asset, onEdit }) => {
 
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2 text-muted-foreground">
-            <span className="font-medium">QR Value:</span>
-            <code className="rounded bg-muted px-2 py-0.5 text-xs">
-              {asset.qr_code_value}
-            </code>
-          </div>
-          
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <span className="font-medium">ID Único:</span>
+            <span className="font-medium">ID (QR Code):</span>
             <code className="rounded bg-muted px-2 py-0.5 text-xs">
               {asset.id.slice(0, 8)}...
             </code>
