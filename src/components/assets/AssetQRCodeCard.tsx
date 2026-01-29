@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Printer, Copy, Check, MapPin, Wrench } from 'lucide-react';
+import { Printer, Copy, Check, MapPin, Wrench, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import hondaLogo from '@/assets/honda-logo.png';
-
 interface AssetQRCodeCardProps {
   asset: {
     id: string;
@@ -22,9 +22,13 @@ interface AssetQRCodeCardProps {
 }
 
 const AssetQRCodeCard: React.FC<AssetQRCodeCardProps> = ({ asset, onEdit }) => {
+  const navigate = useNavigate();
   const printRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = React.useState(false);
 
+  const handleOpenWorkOrder = () => {
+    navigate(`/scan?assetId=${asset.id}`);
+  };
   const handlePrint = () => {
     const printContent = printRef.current;
     if (!printContent) return;
@@ -214,16 +218,26 @@ const AssetQRCodeCard: React.FC<AssetQRCodeCardProps> = ({ asset, onEdit }) => {
         </div>
       </CardContent>
 
-      <CardFooter className="gap-2 border-t pt-4">
-        <Button onClick={handlePrint} className="flex-1 gap-2">
-          <Printer className="h-4 w-4" />
-          Imprimir QR Code
+      <CardFooter className="flex-col gap-2 border-t pt-4">
+        <Button 
+          onClick={handleOpenWorkOrder} 
+          variant="default"
+          className="w-full gap-2 bg-red-600 hover:bg-red-700"
+        >
+          <AlertCircle className="h-4 w-4" />
+          Abrir Chamado
         </Button>
-        {onEdit && (
-          <Button variant="outline" onClick={onEdit}>
-            Editar
+        <div className="flex w-full gap-2">
+          <Button onClick={handlePrint} variant="outline" className="flex-1 gap-2">
+            <Printer className="h-4 w-4" />
+            Imprimir QR
           </Button>
-        )}
+          {onEdit && (
+            <Button variant="outline" onClick={onEdit}>
+              Editar
+            </Button>
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Tables } from '@/integrations/supabase/types';
 import Header from '@/components/Header';
@@ -18,10 +19,44 @@ import { AlertCircle, Loader2 } from 'lucide-react';
 type Asset = Tables<'assets'>;
 
 const ScanPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [showNotFound, setShowNotFound] = useState(false);
   const [manualInput, setManualInput] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoadingFromUrl, setIsLoadingFromUrl] = useState(false);
+
+  // Carregar equipamento via URL param (ex: /scan?assetId=xxx)
+  useEffect(() => {
+    const assetId = searchParams.get('assetId');
+    if (assetId && !selectedAsset) {
+      setIsLoadingFromUrl(true);
+      loadAssetById(assetId);
+    }
+  }, [searchParams]);
+
+  const loadAssetById = async (assetId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('assets')
+        .select('*')
+        .eq('id', assetId)
+        .maybeSingle();
+
+      if (error) throw error;
+      
+      if (data) {
+        setSelectedAsset(data);
+      } else {
+        setShowNotFound(true);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar equipamento:', error);
+      setShowNotFound(true);
+    } finally {
+      setIsLoadingFromUrl(false);
+    }
+  };
 
   const handleQRScan = async (qrValue: string) => {
     setIsSearching(true);
@@ -82,6 +117,20 @@ const ScanPage: React.FC = () => {
   const handleBack = () => {
     setSelectedAsset(null);
   };
+
+  if (isLoadingFromUrl) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container mx-auto px-4 py-6">
+          <div className="flex flex-col items-center justify-center py-16">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="mt-4 text-muted-foreground">Carregando equipamento...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
