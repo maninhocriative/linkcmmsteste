@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { QrCode, Wrench, ArrowRight, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Header from '@/components/Header';
+import AppLayout from '@/components/AppLayout';
 import { useWorkOrder } from '@/context/WorkOrderContext';
 import StatusBadge from '@/components/StatusBadge';
 import PriorityBadge from '@/components/PriorityBadge';
@@ -12,10 +12,8 @@ const Index: React.FC = () => {
   const recentOrders = workOrders.slice(-5).reverse();
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-
-      <main className="container mx-auto px-4 py-8">
+    <AppLayout>
+      <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="mb-12 flex flex-col items-center text-center">
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary">
@@ -115,8 +113,8 @@ const Index: React.FC = () => {
             </div>
           )}
         </div>
-      </main>
-    </div>
+      </div>
+    </AppLayout>
   );
 };
 

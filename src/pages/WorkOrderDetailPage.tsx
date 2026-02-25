@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useWorkOrder } from '@/context/WorkOrderContext';
 import { PartUsed } from '@/types';
-import Header from '@/components/Header';
+import AppLayout from '@/components/AppLayout';
 import StatusBadge from '@/components/StatusBadge';
 import PriorityBadge from '@/components/PriorityBadge';
 import PartsUsedList from '@/components/PartsUsedList';
@@ -71,9 +71,8 @@ const WorkOrderDetailPage: React.FC = () => {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container mx-auto flex flex-col items-center justify-center px-4 py-16">
+      <AppLayout>
+        <div className="container mx-auto flex flex-col items-center justify-center px-4 py-16">
           <FileText className="mb-4 h-16 w-16 text-muted-foreground" />
           <h1 className="text-xl font-semibold text-foreground">OS não encontrada</h1>
           <p className="mt-2 text-muted-foreground">
@@ -82,8 +81,8 @@ const WorkOrderDetailPage: React.FC = () => {
           <Button onClick={() => navigate('/scan')} className="mt-6">
             Abrir Novo Chamado
           </Button>
-        </main>
-      </div>
+        </div>
+      </AppLayout>
     );
   }
 
@@ -139,10 +138,8 @@ const WorkOrderDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-8">
-      <Header />
-
-      <main className="container mx-auto px-4 py-6">
+    <AppLayout>
+      <div className="container mx-auto px-4 py-6 pb-8">
         {/* Back & Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
@@ -458,7 +455,7 @@ const WorkOrderDetailPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Success Modal */}
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
@@ -486,7 +483,7 @@ const WorkOrderDetailPage: React.FC = () => {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </AppLayout>
   );
 };
 
