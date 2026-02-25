@@ -4,7 +4,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Printer, Copy, Check, MapPin, Wrench, AlertCircle } from 'lucide-react';
+import { Printer, Copy, Check, MapPin, Wrench, AlertCircle, History } from 'lucide-react';
 import { toast } from 'sonner';
 import hondaLogo from '@/assets/honda-logo.png';
 interface AssetQRCodeCardProps {
@@ -19,9 +19,10 @@ interface AssetQRCodeCardProps {
     tag?: string | null;
   };
   onEdit?: () => void;
+  onShowHistory?: () => void;
 }
 
-const AssetQRCodeCard: React.FC<AssetQRCodeCardProps> = ({ asset, onEdit }) => {
+const AssetQRCodeCard: React.FC<AssetQRCodeCardProps> = ({ asset, onEdit, onShowHistory }) => {
   const navigate = useNavigate();
   const printRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = React.useState(false);
@@ -232,6 +233,12 @@ const AssetQRCodeCard: React.FC<AssetQRCodeCardProps> = ({ asset, onEdit }) => {
             <Printer className="h-4 w-4" />
             Imprimir QR
           </Button>
+          {onShowHistory && (
+            <Button variant="outline" onClick={onShowHistory} className="gap-1">
+              <History className="h-4 w-4" />
+              Histórico
+            </Button>
+          )}
           {onEdit && (
             <Button variant="outline" onClick={onEdit}>
               Editar
