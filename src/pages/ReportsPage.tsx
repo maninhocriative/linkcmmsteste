@@ -197,7 +197,22 @@ const ReportsPage: React.FC = () => {
   };
 
   const handleExport = () => {
-    toast.info('Funcionalidade de exportação em desenvolvimento');
+    if (!data) return;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) { toast.error('Permita popups para gerar o PDF'); return; }
+    printWindow.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório de Manutenção</title><style>body{font-family:Arial,sans-serif;margin:20px;color:#333}.header{text-align:center;border-bottom:2px solid #e60012;padding-bottom:20px;margin-bottom:20px}.header h1{color:#e60012;margin:0}.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.kpi{border:1px solid #ddd;border-radius:8px;padding:16px;text-align:center}.kpi .value{font-size:24px;font-weight:bold;color:#e60012}.kpi .label{font-size:12px;color:#666}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:12px}th{background:#e60012;color:white}@media print{body{margin:0}}</style></head><body>
+    <div class="header"><h1>Relatório de Manutenção</h1><p>Período: ${filters.dataInicio} a ${filters.dataFim}</p></div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="value">${data.totalOs}</div><div class="label">Total OS</div></div>
+      <div class="kpi"><div class="value">${data.osFechadas}</div><div class="label">Fechadas</div></div>
+      <div class="kpi"><div class="value">${formatTime(data.mttrMinutos)}</div><div class="label">MTTR</div></div>
+      <div class="kpi"><div class="value">R$ ${data.custoTotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div><div class="label">Custo Total</div></div>
+    </div>
+    ${data.pecasMaisUsadas.length > 0 ? `<h3>Peças Mais Utilizadas</h3><table><tr><th>Peça</th><th>Quantidade</th></tr>${data.pecasMaisUsadas.map(p=>`<tr><td>${p.nome}</td><td>${p.quantidade}</td></tr>`).join('')}</table>` : ''}
+    ${data.osPorSetor.length > 0 ? `<h3>OS por Setor</h3><table><tr><th>Setor</th><th>Quantidade</th></tr>${data.osPorSetor.map(s=>`<tr><td>${s.setor}</td><td>${s.quantidade}</td></tr>`).join('')}</table>` : ''}
+    <script>window.onload=function(){window.print()}</script></body></html>`);
+    printWindow.document.close();
+    toast.success('PDF gerado!');
   };
 
   return (

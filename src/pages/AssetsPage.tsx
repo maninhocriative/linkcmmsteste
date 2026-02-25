@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import AssetQRCodeCard from '@/components/assets/AssetQRCodeCard';
 import AssetFormDialog from '@/components/assets/AssetFormDialog';
+import AssetHistoryDialog from '@/components/assets/AssetHistoryDialog';
 import BatchPrintDialog from '@/components/assets/BatchPrintDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +31,7 @@ const AssetsPage: React.FC = () => {
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
   const [selectedAssets, setSelectedAssets] = useState<Set<string>>(new Set());
   const [showBatchPrint, setShowBatchPrint] = useState(false);
+  const [historyAsset, setHistoryAsset] = useState<Asset | null>(null);
 
   // Fetch assets
   const { data: assets, isLoading, error } = useQuery({
@@ -351,6 +353,7 @@ const AssetsPage: React.FC = () => {
                 <AssetQRCodeCard
                   asset={asset}
                   onEdit={() => handleEdit(asset)}
+                  onShowHistory={() => setHistoryAsset(asset)}
                 />
               </div>
             ))}
@@ -405,6 +408,16 @@ const AssetsPage: React.FC = () => {
         assets={selectedAssetsData}
         onClearSelection={clearSelection}
       />
+
+      {/* History Dialog */}
+      {historyAsset && (
+        <AssetHistoryDialog
+          open={!!historyAsset}
+          onOpenChange={(open) => !open && setHistoryAsset(null)}
+          assetId={historyAsset.id}
+          assetName={historyAsset.nome}
+        />
+      )}
     </div>
   );
 };
