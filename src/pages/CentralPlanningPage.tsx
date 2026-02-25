@@ -553,8 +553,8 @@ const CentralPlanningPage: React.FC = () => {
                       }`}
                     >
                       <CardContent className="p-0">
-                        <div className="flex items-start gap-2.5 p-3 cursor-pointer sm:p-4 sm:gap-3" onClick={() => toggleAction(item.id)}>
-                          <Checkbox checked={isSelected} onCheckedChange={() => toggleAction(item.id)} className="mt-1 shrink-0" />
+                        <div className="flex items-start gap-2.5 p-3 cursor-pointer sm:p-4 sm:gap-3" onClick={(e) => { e.preventDefault(); toggleAction(item.id); }}>
+                          <Checkbox checked={isSelected} onCheckedChange={() => toggleAction(item.id)} className="mt-1 shrink-0" onClick={(e) => e.stopPropagation()} />
                           <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
                             isSelected ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
                           } transition-colors`}>
