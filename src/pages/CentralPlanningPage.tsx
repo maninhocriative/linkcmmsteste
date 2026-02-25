@@ -527,11 +527,20 @@ const CentralPlanningPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* Items */}
-            <ScrollArea className="max-h-[600px]">
-              <div className="space-y-1.5">
-                {filteredItems.map((item) => {
-                  const cfg = TYPE_CONFIG[item.type];
+            {/* Items Container */}
+            <Card className="card-elevated overflow-hidden">
+              <CardHeader className="pb-0 px-4 pt-3 sm:px-5">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Itens Disponíveis ({filteredItems.length})
+                  </CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-2 sm:p-3">
+                <ScrollArea className="h-[500px] sm:h-[550px] pr-2">
+                  <div className="space-y-1.5">
+                    {filteredItems.map((item) => {
+                      const cfg = TYPE_CONFIG[item.type];
                   const Icon = cfg?.icon || Box;
                   const isExpanded = expandedItem === item.id;
                   const isSelected = selectedActions.includes(item.id);
@@ -613,8 +622,10 @@ const CentralPlanningPage: React.FC = () => {
                     </Button>
                   </div>
                 )}
-              </div>
-            </ScrollArea>
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* === HISTORY === */}
