@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Tables } from '@/integrations/supabase/types';
-import Header from '@/components/Header';
+import AppLayout from '@/components/AppLayout';
 import QRScanner from '@/components/QRScanner';
 import WorkOrderForm from '@/components/WorkOrderForm';
 import {
@@ -120,23 +120,20 @@ const ScanPage: React.FC = () => {
 
   if (isLoadingFromUrl) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container mx-auto px-4 py-6">
+      <AppLayout>
+        <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col items-center justify-center py-16">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="mt-4 text-muted-foreground">Carregando equipamento...</p>
           </div>
-        </main>
-      </div>
+        </div>
+      </AppLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container mx-auto px-4 py-6">
+    <AppLayout>
+      <div className="container mx-auto px-4 py-6">
         {selectedAsset ? (
           <WorkOrderForm asset={selectedAsset} onBack={handleBack} />
         ) : (
@@ -156,7 +153,7 @@ const ScanPage: React.FC = () => {
             <QRScanner onScan={handleQRScan} onManualInput={handleManualInput} />
           </div>
         )}
-      </main>
+      </div>
 
       {/* Not Found Modal */}
       <Dialog open={showNotFound} onOpenChange={setShowNotFound}>
@@ -196,7 +193,7 @@ const ScanPage: React.FC = () => {
           </form>
         </DialogContent>
       </Dialog>
-    </div>
+    </AppLayout>
   );
 };
 

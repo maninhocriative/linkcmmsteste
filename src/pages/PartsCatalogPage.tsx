@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import Header from '@/components/Header';
+import AppLayout from '@/components/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -194,10 +194,8 @@ const PartsCatalogPage: React.FC = () => {
   const lowStockParts = parts.filter((p) => p.estoque_atual <= p.estoque_minimo);
 
   return (
-    <div className="min-h-screen bg-background pb-8">
-      <Header />
-
-      <main className="container mx-auto px-4 py-6">
+    <AppLayout>
+      <div className="container mx-auto px-4 py-6 pb-8">
         {/* Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
@@ -499,7 +497,7 @@ const PartsCatalogPage: React.FC = () => {
             </div>
           )}
         </div>
-      </main>
+      </div>
 
       {/* Delete Confirmation */}
       <AlertDialog open={!!deletePartId} onOpenChange={() => setDeletePartId(null)}>
@@ -518,7 +516,7 @@ const PartsCatalogPage: React.FC = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </AppLayout>
   );
 };
 

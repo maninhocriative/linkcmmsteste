@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import Header from '@/components/Header';
+import AppLayout from '@/components/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -397,10 +397,8 @@ const PurchasePlanningPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-8">
-      <Header />
-
-      <main className="container mx-auto px-4 py-6">
+    <AppLayout>
+      <div className="container mx-auto px-4 py-6 pb-8">
         {/* Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
@@ -670,8 +668,8 @@ const PurchasePlanningPage: React.FC = () => {
             )}
           </CardContent>
         </Card>
-      </main>
-    </div>
+      </div>
+    </AppLayout>
   );
 };
 

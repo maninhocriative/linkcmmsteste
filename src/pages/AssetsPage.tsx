@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import Header from '@/components/Header';
+import AppLayout from '@/components/AppLayout';
 import AssetQRCodeCard from '@/components/assets/AssetQRCodeCard';
 import AssetFormDialog from '@/components/assets/AssetFormDialog';
 import AssetHistoryDialog from '@/components/assets/AssetHistoryDialog';
@@ -196,22 +196,19 @@ const AssetsPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container mx-auto px-4 py-8">
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8">
           <div className="text-center text-destructive">
             Erro ao carregar equipamentos: {(error as Error).message}
           </div>
-        </main>
-      </div>
+        </div>
+      </AppLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-
-      <main className="container mx-auto px-4 py-8">
+    <AppLayout>
+      <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -375,7 +372,7 @@ const AssetsPage: React.FC = () => {
             )}
           </div>
         )}
-      </main>
+      </div>
 
       {/* Form Dialog */}
       <AssetFormDialog
@@ -418,7 +415,7 @@ const AssetsPage: React.FC = () => {
           assetName={historyAsset.nome}
         />
       )}
-    </div>
+    </AppLayout>
   );
 };
 
