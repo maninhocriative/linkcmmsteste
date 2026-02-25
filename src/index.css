@@ -2,32 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-/* Honda Maintenance System - Design System */
+/* Honda Maintenance System - Premium Design System */
 
 @layer base {
   :root {
-    --background: 40 20% 97%;
-    --foreground: 220 15% 15%;
+    --background: 220 14% 96%;
+    --foreground: 222 20% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 15%;
+    --card-foreground: 222 20% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 15%;
+    --popover-foreground: 222 20% 12%;
 
-    --primary: 220 10% 20%;
+    --primary: 222 18% 16%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 10% 94%;
-    --secondary-foreground: 220 15% 15%;
+    --secondary: 220 14% 93%;
+    --secondary-foreground: 222 20% 12%;
 
-    --muted: 220 10% 92%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 220 12% 93%;
+    --muted-foreground: 220 8% 50%;
 
-    --accent: 220 10% 94%;
-    --accent-foreground: 220 15% 15%;
+    --accent: 220 14% 95%;
+    --accent-foreground: 222 20% 12%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
@@ -35,68 +35,69 @@
     --honda-red: 0 85% 45%;
     --honda-red-foreground: 0 0% 100%;
 
-    --success: 142 70% 40%;
+    --success: 152 60% 42%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
-    --warning-foreground: 220 15% 15%;
+    --warning-foreground: 222 20% 12%;
 
-    --info: 210 90% 50%;
+    --info: 217 80% 52%;
     --info-foreground: 0 0% 100%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 220 10% 20%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 222 18% 16%;
 
-    --radius: 0.75rem;
+    --radius: 0.625rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 222 18% 14%;
+    --sidebar-foreground: 220 10% 75%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 222 18% 14%;
+    --sidebar-accent: 222 15% 20%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 222 14% 22%;
+    --sidebar-ring: 217 80% 52%;
+    --sidebar-muted: 222 12% 38%;
   }
 
   .dark {
-    --background: 220 15% 10%;
+    --background: 222 20% 8%;
     --foreground: 0 0% 95%;
 
-    --card: 220 15% 13%;
+    --card: 222 18% 11%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 220 15% 13%;
+    --popover: 222 18% 11%;
     --popover-foreground: 0 0% 95%;
 
     --primary: 0 0% 95%;
-    --primary-foreground: 220 15% 10%;
+    --primary-foreground: 222 20% 8%;
 
-    --secondary: 220 15% 18%;
+    --secondary: 222 15% 16%;
     --secondary-foreground: 0 0% 95%;
 
-    --muted: 220 15% 18%;
-    --muted-foreground: 220 10% 60%;
+    --muted: 222 12% 16%;
+    --muted-foreground: 220 8% 55%;
 
-    --accent: 220 15% 18%;
+    --accent: 222 14% 16%;
     --accent-foreground: 0 0% 95%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 95%;
 
-    --border: 220 15% 20%;
-    --input: 220 15% 20%;
+    --border: 222 12% 18%;
+    --input: 222 12% 18%;
     --ring: 0 0% 80%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-background: 222 22% 7%;
+    --sidebar-foreground: 220 10% 65%;
+    --sidebar-primary: 217 80% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 222 16% 14%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 222 14% 14%;
+    --sidebar-ring: 217 80% 52%;
   }
 }
 
@@ -106,18 +107,33 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
 @layer components {
   .card-elevated {
-    @apply bg-card rounded-xl shadow-sm border border-border/50;
+    @apply bg-card rounded-xl shadow-sm border border-border/60 transition-shadow duration-200;
+  }
+
+  .card-elevated:hover {
+    box-shadow: 0 4px 20px -4px hsl(var(--foreground) / 0.06);
+  }
+
+  .card-glass {
+    @apply bg-card/80 backdrop-blur-xl rounded-xl border border-border/40 shadow-lg;
   }
 
   .status-badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wide;
   }
 
   .status-aberto {
@@ -133,7 +149,7 @@
   }
 
   .priority-badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium;
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold;
   }
 
   .priority-baixa {
@@ -151,4 +167,29 @@
   .priority-critica {
     @apply bg-destructive/10 text-destructive;
   }
+
+  /* Premium gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--foreground)), hsl(var(--muted-foreground)));
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.35);
 }
