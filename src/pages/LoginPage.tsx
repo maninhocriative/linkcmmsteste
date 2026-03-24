@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Mail, Lock, LogIn, AlertCircle, Wrench } from 'lucide-react';
 import { toast } from 'sonner';
-import hondaLogo from '@/assets/honda-logo.png';
+
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
