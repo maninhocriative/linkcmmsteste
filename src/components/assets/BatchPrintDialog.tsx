@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Printer, X } from 'lucide-react';
 import { toast } from 'sonner';
-import hondaLogo from '@/assets/honda-logo.png';
+
 
 interface Asset {
   id: string;
@@ -46,7 +46,7 @@ const BatchPrintDialog: React.FC<BatchPrintDialogProps> = ({
 
     const qrCards = assets.map((asset) => `
       <div class="qr-card">
-        <img src="${hondaLogo}" alt="Honda" class="logo" />
+        <div class="title" style="font-size:16px;font-weight:bold;margin-bottom:8px;">⚙️ MANUTENÇÃO</div>
         <div class="title">EQUIPAMENTO DE MANUTENÇÃO</div>
         <div class="qr-container">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="140" height="140">

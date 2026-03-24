@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Printer, Copy, Check, MapPin, Wrench, AlertCircle, History } from 'lucide-react';
 import { toast } from 'sonner';
-import hondaLogo from '@/assets/honda-logo.png';
+
 interface AssetQRCodeCardProps {
   asset: {
     id: string;
@@ -110,7 +110,7 @@ const AssetQRCodeCard: React.FC<AssetQRCodeCardProps> = ({ asset, onEdit, onShow
         </head>
         <body>
           <div class="qr-card">
-            <img src="${hondaLogo}" alt="Honda" class="logo" />
+            <div class="title" style="font-size:16px;font-weight:bold;margin-bottom:8px;">⚙️ MANUTENÇÃO</div>
             <div class="title">EQUIPAMENTO DE MANUTENÇÃO</div>
             <div class="qr-container">
               ${printContent.querySelector('svg')?.outerHTML || ''}

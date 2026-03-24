@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import hondaLogo from '@/assets/honda-logo.png';
+
 
 const ROLE_LABELS: Record<string, string> = {
   ADMIN: 'Administrador',
@@ -113,12 +113,12 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ open, onClose }) => {
         {/* Logo */}
         <div className="flex items-center justify-between px-4 py-4">
           <Link to="/" onClick={onClose} className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-accent overflow-hidden">
-              <img src={hondaLogo} alt="Honda" className="h-6 w-auto" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-accent">
+              <Settings className="h-4 w-4 text-sidebar-foreground" />
             </div>
             <div>
               <h1 className="text-[13px] font-bold text-sidebar-accent-foreground leading-none">
-                Honda CMMS
+                CMMS
               </h1>
               <p className="text-[10px] text-sidebar-muted mt-0.5">Sistema de Manutenção</p>
             </div>

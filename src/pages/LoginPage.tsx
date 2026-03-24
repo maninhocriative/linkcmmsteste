@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Mail, Lock, LogIn, AlertCircle, Wrench } from 'lucide-react';
 import { toast } from 'sonner';
-import hondaLogo from '@/assets/honda-logo.png';
+
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -38,8 +38,8 @@ const LoginPage: React.FC = () => {
       {/* Left Panel - Branding (desktop only) */}
       <div className="hidden lg:flex lg:w-[45%] flex-col justify-between bg-primary p-10 text-primary-foreground">
         <div className="flex items-center gap-3">
-          <img src={hondaLogo} alt="Honda" className="h-10 w-auto brightness-0 invert" />
-          <span className="text-lg font-bold">Honda CMMS</span>
+          <Wrench className="h-6 w-6" />
+          <span className="text-lg font-bold">CMMS</span>
         </div>
         <div className="space-y-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-foreground/10 backdrop-blur">
@@ -62,8 +62,10 @@ const LoginPage: React.FC = () => {
         <div className="w-full max-w-sm space-y-6">
           {/* Mobile logo */}
           <div className="flex flex-col items-center lg:hidden mb-8">
-            <img src={hondaLogo} alt="Honda" className="h-16 w-auto mb-3" />
-            <h1 className="text-lg font-bold text-foreground">Honda CMMS</h1>
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground mb-1">
+              <Wrench className="h-7 w-7" />
+            </div>
+            <h1 className="text-lg font-bold text-foreground">CMMS</h1>
             <p className="text-xs text-muted-foreground">Sistema de Manutenção</p>
           </div>
 
