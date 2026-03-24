@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import AppSidebar from '@/components/AppSidebar';
 import NotificationBell from '@/components/notifications/NotificationBell';
-import hondaLogo from '@/assets/honda-logo.png';
+import { Wrench } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 interface AppLayoutProps {
