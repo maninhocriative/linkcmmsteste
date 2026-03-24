@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import { Badge } from '@/components/ui/badge';
-import hondaLogo from '@/assets/honda-logo.png';
+import { Wrench } from 'lucide-react';
 
 const ROLE_LABELS: Record<string, string> = {
   ADMIN: 'Administrador',
