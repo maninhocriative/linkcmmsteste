@@ -110,7 +110,7 @@ const AssetQRCodeCard: React.FC<AssetQRCodeCardProps> = ({ asset, onEdit, onShow
         </head>
         <body>
           <div class="qr-card">
-            <img src="${hondaLogo}" alt="Honda" class="logo" />
+            <div class="title" style="font-size:16px;font-weight:bold;margin-bottom:8px;">⚙️ MANUTENÇÃO</div>
             <div class="title">EQUIPAMENTO DE MANUTENÇÃO</div>
             <div class="qr-container">
               ${printContent.querySelector('svg')?.outerHTML || ''}
