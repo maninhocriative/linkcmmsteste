@@ -52,7 +52,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               </Button>
             )}
             <Link to="/" className="flex items-center gap-2 lg:hidden">
-              <img src={hondaLogo} alt="Honda" className="h-7 w-auto" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                <Wrench className="h-4 w-4" />
+              </div>
             </Link>
             {pageTitle && (
               <h2 className="hidden lg:block text-sm font-semibold text-foreground">

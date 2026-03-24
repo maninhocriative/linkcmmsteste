@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Printer, Copy, Check, MapPin, Wrench, AlertCircle, History } from 'lucide-react';
 import { toast } from 'sonner';
-import hondaLogo from '@/assets/honda-logo.png';
+
 interface AssetQRCodeCardProps {
   asset: {
     id: string;

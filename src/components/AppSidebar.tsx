@@ -118,7 +118,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ open, onClose }) => {
             </div>
             <div>
               <h1 className="text-[13px] font-bold text-sidebar-accent-foreground leading-none">
-                Honda CMMS
+                CMMS
               </h1>
               <p className="text-[10px] text-sidebar-muted mt-0.5">Sistema de Manutenção</p>
             </div>

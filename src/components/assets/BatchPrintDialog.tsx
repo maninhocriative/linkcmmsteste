@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Printer, X } from 'lucide-react';
 import { toast } from 'sonner';
-import hondaLogo from '@/assets/honda-logo.png';
+
 
 interface Asset {
   id: string;
