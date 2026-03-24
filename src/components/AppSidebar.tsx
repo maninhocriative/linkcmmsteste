@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import hondaLogo from '@/assets/honda-logo.png';
+
 
 const ROLE_LABELS: Record<string, string> = {
   ADMIN: 'Administrador',
