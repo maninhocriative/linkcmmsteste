@@ -38,8 +38,8 @@ const LoginPage: React.FC = () => {
       {/* Left Panel - Branding (desktop only) */}
       <div className="hidden lg:flex lg:w-[45%] flex-col justify-between bg-primary p-10 text-primary-foreground">
         <div className="flex items-center gap-3">
-          <img src={hondaLogo} alt="Honda" className="h-10 w-auto brightness-0 invert" />
-          <span className="text-lg font-bold">Honda CMMS</span>
+          <Wrench className="h-6 w-6" />
+          <span className="text-lg font-bold">CMMS</span>
         </div>
         <div className="space-y-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-foreground/10 backdrop-blur">
