@@ -42,7 +42,7 @@ const Header: React.FC = () => {
             <h1 className="text-lg font-semibold leading-tight text-foreground">
               Sistema de Manutenção
             </h1>
-            <p className="text-xs text-muted-foreground">Honda Brasil</p>
+            <p className="text-xs text-muted-foreground">Gestão de Manutenção</p>
           </div>
         </Link>
 
