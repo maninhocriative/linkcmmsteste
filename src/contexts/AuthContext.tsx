@@ -17,18 +17,34 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const ROLE_KEY = 'cmms_user_role';
 
 const fetchUserRole = async (userId: string): Promise<AppRole> => {
-  const { data, error } = await supabase
-    .from('user_roles')
-    .select('role')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .maybeSingle();
 
-  if (error || !data) return 'OPERACAO';
-  return data.role as AppRole;
+    if (error) {
+      console.error('Error fetching role:', error);
+      const cached = localStorage.getItem(ROLE_KEY) as AppRole;
+      return cached || 'OPERACAO';
+    }
+
+    if (data?.role) {
+      localStorage.setItem(ROLE_KEY, data.role);
+      return data.role as AppRole;
+    }
+
+    const cached = localStorage.getItem(ROLE_KEY) as AppRole;
+    return cached || 'OPERACAO';
+  } catch (e) {
+    console.error('Exception fetching role:', e);
+    const cached = localStorage.getItem(ROLE_KEY) as AppRole;
+    return cached || 'OPERACAO';
+  }
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -58,10 +74,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
 
         if (session?.user) {
+          // Use cached role immediately to avoid flicker
+          const cached = localStorage.getItem(ROLE_KEY) as AppRole;
+          if (cached) setUserRole(cached);
+          
+          // Then fetch fresh role
           const role = await fetchUserRole(session.user.id);
           setUserRole(role);
         } else {
           setUserRole(null);
+          localStorage.removeItem(ROLE_KEY);
         }
         setLoading(false);
       }
@@ -88,6 +110,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
+    localStorage.removeItem(ROLE_KEY);
     await supabase.auth.signOut();
   };
 
