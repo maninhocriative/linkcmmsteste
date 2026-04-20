@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,19 +13,25 @@ const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { signIn } = useAuth();
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    const { error } = await signIn(email, password);
-    if (error) {
-      setError('Email ou senha inválidos. Tente novamente.');
+    try {
+      const { error } = await signIn(email, password);
+      if (error) {
+        setError('Email ou senha inválidos. Tente novamente.');
+        setLoading(false);
+      } else {
+        toast.success('Login realizado com sucesso!');
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 500);
+      }
+    } catch (err) {
+      setError('Erro ao conectar. Tente novamente.');
       setLoading(false);
-    } else {
-      toast.success('Login realizado com sucesso!');
-      navigate('/');
     }
   };
 
