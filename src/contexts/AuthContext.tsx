@@ -3,6 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
 type AppRole = 'ADMIN' | 'MANUTENCAO' | 'OPERACAO';
+const ROLE_KEY = 'cmms_role';
 
 interface AuthContextType {
   user: User | null;
@@ -17,35 +18,29 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-const ROLE_KEY = 'cmms_user_role';
 
-const fetchUserRole = async (userId: string): Promise<AppRole> => {
-  try {
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId)
-      .maybeSingle();
+async function fetchRoleWithRetry(userId: string, retries = 5): Promise<AppRole> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .maybeSingle();
 
-    if (error) {
-      console.error('Error fetching role:', error);
-      const cached = localStorage.getItem(ROLE_KEY) as AppRole;
-      return cached || 'OPERACAO';
+      if (!error && data?.role) {
+        localStorage.setItem(ROLE_KEY, data.role);
+        return data.role as AppRole;
+      }
+    } catch (e) {
+      // ignore, retry
     }
-
-    if (data?.role) {
-      localStorage.setItem(ROLE_KEY, data.role);
-      return data.role as AppRole;
-    }
-
-    const cached = localStorage.getItem(ROLE_KEY) as AppRole;
-    return cached || 'OPERACAO';
-  } catch (e) {
-    console.error('Exception fetching role:', e);
-    const cached = localStorage.getItem(ROLE_KEY) as AppRole;
-    return cached || 'OPERACAO';
+    // Wait before retry: 200ms, 400ms, 800ms...
+    await new Promise(r => setTimeout(r, 200 * Math.pow(2, i)));
   }
-};
+  // Return cached if available
+  return (localStorage.getItem(ROLE_KEY) as AppRole) || 'OPERACAO';
+}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -54,19 +49,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const initAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+    // Apply cached role immediately to avoid flash
+    const cached = localStorage.getItem(ROLE_KEY) as AppRole;
+    if (cached) setUserRole(cached);
+
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-
       if (session?.user) {
-        const role = await fetchUserRole(session.user.id);
+        const role = await fetchRoleWithRetry(session.user.id);
         setUserRole(role);
+      } else {
+        setUserRole(null);
       }
       setLoading(false);
-    };
-
-    initAuth();
+    });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -74,12 +71,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Use cached role immediately to avoid flicker
           const cached = localStorage.getItem(ROLE_KEY) as AppRole;
           if (cached) setUserRole(cached);
           
-          // Then fetch fresh role
-          const role = await fetchUserRole(session.user.id);
+          const role = await fetchRoleWithRetry(session.user.id);
           setUserRole(role);
         } else {
           setUserRole(null);
@@ -99,12 +94,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, nome: string) => {
     const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: window.location.origin,
-        data: { nome },
-      },
+      email, password,
+      options: { emailRedirectTo: window.location.origin, data: { nome } },
     });
     return { error };
   };
@@ -126,6 +117,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
