@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,10 +25,16 @@ const LoginPage: React.FC = () => {
         setError('Email ou senha inválidos. Tente novamente.');
         setLoading(false);
       } else {
-        toast.success('Login realizado com sucesso!');
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 500);
+        // Aguarda sessão ser confirmada pelo Supabase
+        let attempts = 0;
+        const checkSession = setInterval(async () => {
+          attempts++;
+          const { data } = await supabase.auth.getSession();
+          if (data.session || attempts > 10) {
+            clearInterval(checkSession);
+            window.location.replace('/');
+          }
+        }, 300);
       }
     } catch (err) {
       setError('Erro ao conectar. Tente novamente.');
