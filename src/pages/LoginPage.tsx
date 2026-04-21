@@ -1,52 +1,37 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Mail, Lock, LogIn, AlertCircle, Settings, Cpu, ClipboardList, BarChart3 } from 'lucide-react';
-import { toast } from 'sonner';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    try {
-      const { error } = await signIn(email, password);
-      if (error) {
-        setError('Email ou senha inválidos. Tente novamente.');
-        setLoading(false);
-      } else {
-        // Aguarda sessão ser confirmada pelo Supabase
-        let attempts = 0;
-        const checkSession = setInterval(async () => {
-          attempts++;
-          const { data } = await supabase.auth.getSession();
-          if (data.session || attempts > 10) {
-            clearInterval(checkSession);
-            window.location.replace('/');
-          }
-        }, 300);
-      }
-    } catch (err) {
-      setError('Erro ao conectar. Tente novamente.');
+
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (signInError || !data.session) {
+      setError('Email ou senha inválidos. Tente novamente.');
       setLoading(false);
+      return;
     }
+
+    // Login bem sucedido — redireciona
+    window.location.href = '/';
   };
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Left Panel */}
       <div className="hidden lg:flex lg:w-[42%] flex-col justify-between bg-[#0f1117] p-10 border-r border-white/8">
-        {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 shadow-lg shadow-blue-600/30">
             <span className="text-[12px] font-black text-white tracking-tight">CM</span>
@@ -56,8 +41,6 @@ const LoginPage: React.FC = () => {
             <p className="text-[10px] text-white/40 leading-none mt-0.5">Honda Brasil</p>
           </div>
         </div>
-
-        {/* Hero */}
         <div className="space-y-6">
           <div className="space-y-3">
             <h2 className="text-3xl font-bold text-white leading-tight">
@@ -67,8 +50,6 @@ const LoginPage: React.FC = () => {
               Gerencie ordens de serviço, controle estoque de peças e planeje manutenções preventivas em uma única plataforma.
             </p>
           </div>
-
-          {/* Feature cards */}
           <div className="grid grid-cols-2 gap-3">
             {[
               { icon: ClipboardList, label: 'Ordens de Serviço', desc: 'Abertura via QR Code' },
@@ -86,16 +67,11 @@ const LoginPage: React.FC = () => {
             ))}
           </div>
         </div>
-
-        <p className="text-[11px] text-white/25">
-          © {new Date().getFullYear()} Honda Brasil · Sistema interno
-        </p>
+        <p className="text-[11px] text-white/25">© {new Date().getFullYear()} Honda Brasil · Sistema interno</p>
       </div>
 
-      {/* Right Panel - Form */}
       <div className="flex flex-1 items-center justify-center p-6 bg-background">
         <div className="w-full max-w-sm space-y-7">
-          {/* Mobile logo */}
           <div className="flex flex-col items-center lg:hidden mb-2">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 shadow-lg shadow-blue-600/30 mb-2">
               <span className="text-[14px] font-black text-white">CM</span>
@@ -116,53 +92,33 @@ const LoginPage: React.FC = () => {
                 {error}
               </div>
             )}
-
             <div className="space-y-1.5">
               <Label htmlFor="email" className="text-xs font-semibold text-foreground/80">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={email}
+                <Input id="email" type="email" placeholder="seu@email.com" value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="pl-10 h-11 bg-background border-border/60 focus:border-blue-500 transition-colors"
-                  required
-                />
+                  className="pl-10 h-11 border-border/60" required />
               </div>
             </div>
-
             <div className="space-y-1.5">
               <Label htmlFor="password" className="text-xs font-semibold text-foreground/80">Senha</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
+                <Input id="password" type="password" placeholder="••••••••" value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="pl-10 h-11 bg-background border-border/60 focus:border-blue-500 transition-colors"
-                  required
-                />
+                  className="pl-10 h-11 border-border/60" required />
               </div>
             </div>
-
-            <Button
-              type="submit"
-              className="w-full h-11 gap-2 font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20 transition-all"
-              disabled={loading}
-            >
+            <Button type="submit"
+              className="w-full h-11 gap-2 font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={loading}>
               <LogIn className="h-4 w-4" />
               {loading ? 'Entrando...' : 'Entrar'}
             </Button>
-
             <p className="text-center text-sm text-muted-foreground">
               Não tem uma conta?{' '}
-              <Link to="/registro" className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
-                Cadastre-se
-              </Link>
+              <Link to="/registro" className="font-semibold text-blue-600 hover:text-blue-500">Cadastre-se</Link>
             </p>
           </form>
         </div>
