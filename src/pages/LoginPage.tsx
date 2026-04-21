@@ -25,8 +25,13 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    // Login bem sucedido — redireciona
-    window.location.href = '/';
+    // Força a sessão manualmente no cliente
+    await supabase.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+    });
+
+    window.location.replace('/');
   };
 
   return (
@@ -79,12 +84,10 @@ const LoginPage: React.FC = () => {
             <h1 className="text-base font-bold text-foreground">CMMS</h1>
             <p className="text-xs text-muted-foreground">Sistema de Manutenção Honda</p>
           </div>
-
           <div>
             <h1 className="text-2xl font-bold text-foreground">Bem-vindo de volta</h1>
             <p className="mt-1 text-sm text-muted-foreground">Faça login para acessar o sistema</p>
           </div>
-
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="flex items-center gap-2.5 rounded-xl bg-red-500/8 border border-red-500/20 p-3 text-sm text-red-600 dark:text-red-400">
@@ -96,8 +99,8 @@ const LoginPage: React.FC = () => {
               <Label htmlFor="email" className="text-xs font-semibold text-foreground/80">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input id="email" type="email" placeholder="seu@email.com" value={email}
-                  onChange={e => setEmail(e.target.value)}
+                <Input id="email" type="email" autoComplete="email" placeholder="seu@email.com"
+                  value={email} onChange={e => setEmail(e.target.value)}
                   className="pl-10 h-11 border-border/60" required />
               </div>
             </div>
@@ -105,8 +108,8 @@ const LoginPage: React.FC = () => {
               <Label htmlFor="password" className="text-xs font-semibold text-foreground/80">Senha</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input id="password" type="password" placeholder="••••••••" value={password}
-                  onChange={e => setPassword(e.target.value)}
+                <Input id="password" type="password" autoComplete="current-password" placeholder="••••••••"
+                  value={password} onChange={e => setPassword(e.target.value)}
                   className="pl-10 h-11 border-border/60" required />
               </div>
             </div>
